@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aluminum Price Tracker — UAE & Saudi Arabia | Live Dashboard</title>
+  <meta name="description" content="Real-time aluminum price tracker for UAE (AED) and Saudi Arabia (SAR). Live updates with price history and charts.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏭</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- ═══ Header ═══ -->
+    <header class="header">
+      <div class="header-left">
+        <h1 class="header-title">🏭 Aluminum Price Tracker</h1>
+        <p class="header-subtitle">Live prices — UAE & Saudi Arabia</p>
+      </div>
+      <div class="header-right">
+        <div class="live-badge" id="connectionBadge">
+          <span class="live-dot" id="liveDot"></span>
+          <span id="connectionText">Connecting...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ═══ Controls Bar ═══ -->
+    <div class="controls-bar">
+      <label for="scheduleSelect">⏱️ Auto-refresh:</label>
+      <select class="schedule-select" id="scheduleSelect">
+        <option value="30">Every 30 seconds</option>
+        <option value="60" selected>Every 1 minute</option>
+        <option value="120">Every 2 minutes</option>
+        <option value="300">Every 5 minutes</option>
+        <option value="600">Every 10 minutes</option>
+        <option value="900">Every 15 minutes</option>
+        <option value="1800">Every 30 minutes</option>
+        <option value="3600">Every 1 hour</option>
+      </select>
+
+      <button class="btn btn-primary" id="refreshBtn" onclick="manualRefresh()">
+        <span class="btn-icon">🔄</span>
+        <span id="refreshBtnText">Refresh Now</span>
+      </button>
+
+      <button class="btn btn-secondary" id="downloadBtn" onclick="downloadCSV()">
+        <span class="btn-icon">📥</span>
+        Download CSV
+      </button>
+
+      <div class="controls-spacer"></div>
+
+      <span class="next-refresh" id="nextRefreshTimer"></span>
+    </div>
+
+    <!-- ═══ Price Cards ═══ -->
+    <div class="price-grid">
+
+      <!-- UAE Card -->
+      <div class="price-card uae" id="cardUAE">
+        <div class="card-header">
+          <div class="card-country">
+            <span class="country-flag">🇦🇪</span>
+            <div class="country-info">
+              <span class="country-name">UAE (Dubai)</span>
+              <span class="country-currency">UAE Dirham (AED)</span>
+            </div>
+          </div>
+          <div class="price-change neutral" id="uaeChange">
+            <span class="change-arrow" id="uaeArrow">—</span>
+            <span id="uaeChangeText">0.000%</span>
+          </div>
+        </div>
+
+        <div class="price-main">
+          <div class="price-value" id="uaePriceLocal">
+            <span class="loading-text">Loading...</span>
+          </div>
+          <div class="price-label">Aluminum per Metric Ton</div>
+        </div>
+
+        <div class="card-details">
+          <div class="detail-item">
+            <span class="detail-label">USD Price</span>
+            <span class="detail-value" id="uaePriceUSD">—</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Exchange Rate</span>
+            <span class="detail-value" id="uaeExchangeRate">—</span>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <span class="card-updated" id="uaeUpdated">Waiting for data...</span>
+          <span class="card-source">Live Tracking</span>
+        </div>
+      </div>
+
+      <!-- Saudi Arabia Card -->
+      <div class="price-card saudi" id="cardSaudi">
+        <div class="card-header">
+          <div class="card-country">
+            <span class="country-flag">🇸🇦</span>
+            <div class="country-info">
+              <span class="country-name">Saudi Arabia</span>
+              <span class="country-currency">Saudi Riyal (SAR)</span>
+            </div>
+          </div>
+          <div class="price-change neutral" id="saudiChange">
+            <span class="change-arrow" id="saudiArrow">—</span>
+            <span id="saudiChangeText">0.000%</span>
+          </div>
+        </div>
+
+        <div class="price-main">
+          <div class="price-value" id="saudiPriceLocal">
+            <span class="loading-text">Loading...</span>
+          </div>
+          <div class="price-label">Aluminum per Metric Ton</div>
+        </div>
+
+        <div class="card-details">
+          <div class="detail-item">
+            <span class="detail-label">USD Price</span>
+            <span class="detail-value" id="saudiPriceUSD">—</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Exchange Rate</span>
+            <span class="detail-value" id="saudiExchangeRate">—</span>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <span class="card-updated" id="saudiUpdated">Waiting for data...</span>
+          <span class="card-source">Live Tracking</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══ Price Chart ═══ -->
+    <div class="chart-section">
+      <div class="chart-header">
+        <h2 class="chart-title">📈 Price Trend (USD)</h2>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <span class="legend-dot uae"></span>
+            UAE (AED)
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot saudi"></span>
+            Saudi (SAR)
+          </div>
+        </div>
+      </div>
+      <div class="chart-canvas-container">
+        <canvas id="priceChart"></canvas>
+      </div>
+    </div>
+
+    <!-- ═══ Price History Table ═══ -->
+    <div class="history-section">
+      <div class="history-header">
+        <h2 class="history-title">📋 Price History</h2>
+        <span class="history-count" id="historyCount">0 records</span>
+      </div>
+      <div class="table-wrapper">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>🇦🇪 UAE (AED)</th>
+              <th>🇦🇪 UAE (USD)</th>
+              <th>AED/USD Rate</th>
+              <th>🇸🇦 Saudi (SAR)</th>
+              <th>🇸🇦 Saudi (USD)</th>
+              <th>SAR/USD Rate</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody">
+            <tr>
+              <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                Waiting for first price update...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ Footer ═══ -->
+    <footer class="app-footer">
+      <p>Built by <strong>SHISHIR</strong></p>
+      <p style="margin-top: 4px; opacity: 0.7;">Real-Time Aluminum Price Tracker</p>
+    </footer>
+
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
