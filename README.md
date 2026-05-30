@@ -2,7 +2,9 @@
 
 A high-performance, real-time tracking dashboard for Aluminum spot prices in the **United Arab Emirates (AED)** and **Saudi Arabia (SAR)**. Built with Node.js and Vanilla JavaScript, this tool provides a premium dark-themed interface, live auto-refreshing prices via Server-Sent Events (SSE), interactive sparkline charts, and automated CSV history logging.
 
-![Aluminum Tracker Dashboard](https://via.placeholder.com/1000x500.png?text=Dashboard+Screenshot)
+<img width="1439" height="751" alt="Capture" src="https://github.com/user-attachments/assets/aa0d7f36-3e47-43da-8243-a721f290d3a3" />
+<img width="1440" height="747" alt="Capture2" src="https://github.com/user-attachments/assets/063b1eb1-a067-4e4c-b232-8e9df671e993" />
+
 
 ## ✨ Features
 
@@ -52,7 +54,7 @@ A high-performance, real-time tracking dashboard for Aluminum spot prices in the
 
 ```bash
 # Build the image
-docker build -t aluminum-price-tracker .
+docker build -t aluminum-price-tracker.
 
 # Run the container (with persistent CSV storage)
 docker run -p 3000:3000 -v "$(pwd)/price_history.csv:/usr/src/app/price_history.csv" -d aluminum-price-tracker
