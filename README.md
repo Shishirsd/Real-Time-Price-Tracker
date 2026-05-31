@@ -31,8 +31,8 @@ A high-performance, real-time tracking dashboard for Aluminum spot prices in the
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/aluminum-price-tracker.git
-   cd aluminum-price-tracker
+   git clone https://github.com/Shishirsd/Real-Time-Price-Tracker.git
+   cd Real-Time-Price-Tracker
    ```
 
 2. Install dependencies:
