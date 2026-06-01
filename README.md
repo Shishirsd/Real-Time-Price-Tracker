@@ -54,7 +54,7 @@ A high-performance, real-time tracking dashboard for Aluminum spot prices in the
 
 ```bash
 # Build the image
-docker build -t aluminum-price-tracker.
+docker build -t aluminum-price-tracker .
 
 # Run the container (with persistent CSV storage)
 docker run -p 3000:3000 -v "$(pwd)/price_history.csv:/usr/src/app/price_history.csv" -d aluminum-price-tracker
