@@ -57,7 +57,11 @@ A high-performance, real-time tracking dashboard for Aluminum spot prices in the
 docker build -t aluminum-price-tracker .
 
 # Run the container (with persistent CSV storage)
-docker run -p 3000:3000 -v "$(pwd)/price_history.csv:/usr/src/app/price_history.csv" -d aluminum-price-tracker
+##If you are using Command Prompt (CMD):
+docker run -p 3000:3000 -v "%cd%/price_history.csv:/usr/src/app/price_history.csv" --name aluminum-tracker -d aluminum-price-tracker
+
+##If you are using PowerShell:
+docker run -p 3000:3000 -v "${PWD}/price_history.csv:/usr/src/app/price_history.csv" --name aluminum-tracker -d aluminum-price-tracker
 ```
 
 ## 🌐 API Endpoints
